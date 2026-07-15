@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مُزخرف النصوص الاحترافي ✨</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        h1 {
+            color: #00f2fe;
+            margin-bottom: 5px;
+            font-size: 24px;
+            text-shadow: 0 2px 10px rgba(0, 242, 254, 0.3);
+        }
+        p.subtitle {
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 16px;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+            transition: 0.3s;
+            text-align: center;
+        }
+        textarea:focus {
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+        .results-container {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .result-box {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #00f2fe;
+            transition: 0.2s;
+        }
+        .result-box:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .result-text {
+            font-size: 18px;
+            word-break: break-all;
+            flex-grow: 1;
+            text-align: right;
+            padding-left: 10px;
+        }
+        .copy-btn {
+            background: #00f2fe;
+            color: #0f2027;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .copy-btn:hover {
+            background: #4facfe;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>✨ مُزخرف النصوص الاحترافي</h1>
+    <p class="subtitle">اكتب اسمك أو نصك بالأسفل وشاهد السحر!</p>
+    
+    <textarea id="textInput" placeholder="اكتب النص هنا (عربي أو إنجليزي)..." oninput="decorateText()"></textarea>
+
+    <div class="results-container" id="results">
+        <!-- ستظهر الزخارف هنا تلقائياً -->
+    </div>
+</div>
+
+<script>
+    // أنماط زخرفة الحروف الإنجليزية
+    const englishStyles = [
+        { name: "M_1", map: { 'a': 'α', 'b': 'в', 'c': '¢', 'd': '∂', 'e': 'є', 'f': 'ƒ', 'g': 'g', 'h': 'н', 'i': 'ι', 'j': 'נ', 'k': 'к', 'l': 'ℓ', 'm': 'м', 'n': 'η', 'o': 'σ', 'p': 'ρ', 'q': 'q', 'r': 'я', 's': 'ѕ', 't': 'т', 'u': 'υ', 'v': 'ν', 'w': 'ω', 'x': 'χ', 'y': 'у', 'z': 'z' } },
+        { name: "M_2", map: { 'a': 'ⓐ', 'b': 'ⓑ', 'c': 'ⓒ', 'd': 'ⓓ', 'e': 'ⓔ', 'f': 'ⓕ', 'g': 'ⓖ', 'h': 'ⓗ', 'i': 'ⓘ', 'j': 'ⓙ', 'k': 'ⓚ', 'l': 'ⓛ', 'm': 'ⓜ', 'n': 'ⓝ', 'o': 'ⓞ', 'p': 'ⓟ', 'q': 'ⓠ', 'r': 'ⓡ', 's': 'ⓢ', 't': 'ⓣ', 'u': 'ⓤ', 'v': 'ⓥ', 'w': 'ⓦ', 'x': 'ⓧ', 'y': 'ⓨ', 'z': 'ⓩ' } },
+        { name: "M_3", map: { 'a': 'A', 'b': 'B', 'c': 'C', 'd': 'D', 'e': 'E', 'f': 'F', 'g': 'G', 'h': 'H', 'i': 'I', 'j': 'J', 'k': 'K', 'l': 'L', 'm': 'M', 'n': 'N', 'o': 'O', 'p': 'P', 'q': 'Q', 'r': 'R', 's': 'S', 't': 'T', 'u': 'U', 'v': 'V', 'w': 'W', 'x': 'X', 'y': 'Y', 'z': 'Z' } } // غامق أو كابيتال
+    ];
+
+    // لواحق وبدايات الزخرفة العربية
+    const arabicDecorations = [
+        { prefix: " 彡 ", suffix: " 彡" },
+        { prefix: " 々 ", suffix: " 々" },
+        { prefix: " ズ ", suffix: " 气" },
+        { prefix: "✿ ", suffix: " ✿" },
+        { prefix: "♛ ", suffix: " ♛" },
+        { prefix: "꧁ ", suffix: " ꧂" },
+        { prefix: "★彡 ", suffix: " 彡★" }
+    ];
+
+    function decorateText() {
+        const input = document.getElementById('textInput').value.trim();
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
+
+        if (!input) return;
+
+        let decoratedOptions = [];
+
+        // التحقق هل النص عربي أم إنجليزي
+        const isEnglish = /^[A-Za-z\s]+$/.test(input);
+
+        if (isEnglish) {
+            // زخرفة إنجليزية بالحروف البديلة
+            englishStyles.forEach(style => {
+                let decorated = input.toLowerCase().split('').map(char => {
+                    return style.map[char] || char;
+                }).join('');
+                decoratedOptions.push(decorated);
+            });
+            // إضافة بعض الرموز للخيارات الإنجليزية أيضاً
+            decoratedOptions.push(`꧁ ${input} ꧂`);
+            decoratedOptions.push(`★ ${input} ★`);
+        } else {
+            // زخرفة عربية بإضافة الرموز والحركات التجميلية
+            arabicDecorations.forEach(dec => {
+                decoratedOptions.push(`${dec.prefix}${input}${dec.suffix}`);
+            });
+        }
+
+        // عرض النتائج في الصفحة
+        decoratedOptions.forEach(text => {
+            const box = document.createElement('div');
+            box.className = 'result-box';
+
+            const textSpan = document.createElement('span');
+            textSpan.className = 'result-text';
+            textSpan.innerText = text;
+
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.innerText = 'نسخ 📋';
+            copyBtn.onclick = () => copyToClipboard(text, copyBtn);
+
+            box.appendChild(textSpan);
+            box.appendChild(copyBtn);
+            resultsDiv.appendChild(box);
+        });
+    }
+
+    function copyToClipboard(text, button) {
+        navigator.clipboard.writeText(text).then(() => {
+            button.innerText = 'تم النسخ! ✓';
+            button.style.background = '#2ed573';
+            setTimeout(() => {
+                button.innerText = 'نسخ 📋';
+                button.style.background = '#00f2fe';
+            }, 1500);
+        });
+    }
+</script>
+
+</body>
+</html>
