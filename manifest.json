@@ -1,0 +1,16 @@
+{
+  "short_name": "زخرفة",
+  "name": "مُزخرف النصوص الاحترافي",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/616/616430.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/Mo.A/index.html",
+  "background_color": "#f4f6f9",
+  "display": "standalone",
+  "theme_color": "#007bff",
+  "orientation": "portrait"
+}
