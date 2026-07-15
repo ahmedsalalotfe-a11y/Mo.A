@@ -1,11 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>كابتن سيناريو | ألعاب تحدي الصحاب</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
@@ -28,7 +26,6 @@
     </style>
 </head>
 <body>
-
 <div class="game-container">
     <h1>🏆 كابتن سيناريو</h1>
     <div id="setupStage">
@@ -40,12 +37,10 @@
         <div id="playersList"></div>
         <button class="btn btn-accent" style="width: 100%; margin-top: 20px;" onclick="startGame()">ابدأ التحدي 🚀</button>
     </div>
-
     <div id="playStage" class="hidden">
         <div class="scenario-box" id="scenarioText">جاري التحضير...</div>
         <textarea id="playerDecision" rows="3" placeholder="اكتب قرارك هنا..." style="width: 90%; margin-bottom: 10px;"></textarea>
         <button class="btn btn-accent" onclick="submitDecision()" style="width: 100%;">أرسل القرار ⚖️</button>
-        
         <div class="result-box" id="resultBox">
             <h3 style="text-align: center; color: var(--accent-color);">النتيجة</h3>
             <div id="survivalRate" style="font-size: 2rem; color: var(--success-color); text-align: center;"></div>
@@ -53,24 +48,19 @@
             <button class="btn" style="width: 100%;" onclick="nextRound()">اللاعب التالي 🔄</button>
         </div>
     </div>
-
     <a href="https://wa.me/201020053692?text=يا%20كابتن%20أحمد%20أنا%20عايز%20أعمل%20نسخة%20خاصة%20من%20اللعبة!" target="_blank" class="dev-contact">
         💬 تواصل مع المطور (أحمد صلاح) 01020053692
     </a>
 </div>
-
 <script>
-    const API_KEY = "AIzaSyD" + "TEST" + "KEY"; // استبدله بمفتاحك لو عايز ذكاء اصطناعي حقيقي
     let players = [];
     let currentPlayerIndex = 0;
-    let usedScenarios = [];
     const scenarios = [
         "أنت نايم في حصة المستر وفجأة نده اسمك وقالك اعرب الكلمة اللي على السبورة، و [OTHERS] عمالين يغششوك إجابة غلط!",
         "كنت بتلعب كورة وشوطت كورة صاروخية كسرت فازة الست أم أحمد العصبية، و [OTHERS] جريوا وسابوك لوحدك!",
         "دخلت لجنة الامتحان ولقيت أول سؤالين في الفيزياء بلغة غريبة، و [OTHERS] بيحلوا بسرعة مريبة والمراقب واقف فوق راسك!",
         "كنت بتهزر مع [OTHERS] والمستر طردك أنت بالذات وسابهم هما يكملوا الحصة عادي!"
     ];
-
     function addPlayer() {
         const name = document.getElementById('playerName').value.trim();
         if (name && !players.includes(name)) {
@@ -79,23 +69,21 @@
             document.getElementById('playerName').value = '';
         }
     }
-
     function startGame() {
         if (players.length < 2) { alert("ضيف لاعبين على الأقل!"); return; }
         document.getElementById('setupStage').classList.add('hidden');
         document.getElementById('playStage').classList.remove('hidden');
         nextRound();
     }
-
     function nextRound() {
         document.getElementById('resultBox').style.display = 'none';
+        document.getElementById('playerDecision').value = '';
         const activePlayer = players[currentPlayerIndex];
         const others = players.filter(p => p !== activePlayer).join(' و ');
         let template = scenarios[Math.floor(Math.random() * scenarios.length)];
         document.getElementById('scenarioText').innerHTML = `<b>${activePlayer}</b>: ${template.replace('[OTHERS]', others)}`;
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
     }
-
     function submitDecision() {
         document.getElementById('resultBox').style.display = 'block';
         document.getElementById('survivalRate').innerText = Math.floor(Math.random() * 100) + "%";
@@ -104,3 +92,4 @@
 </script>
 </body>
 </html>
+
