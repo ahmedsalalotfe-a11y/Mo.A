@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كابتن سيناريو | ألعاب تحدي الصحاب</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --accent-color: #f59e0b;
+            --neon-blue: #06b6d4;
+            --text-color: #f8fafc;
+            --success-color: #10b981;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-gradient); color: var(--text-color); margin: 0; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .game-container { background-color: #1e293b; border-radius: 24px; padding: 25px; width: 100%; max-width: 480px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); border: 2px solid var(--neon-blue); }
+        h1 { text-align: center; color: var(--accent-color); font-size: 2rem; margin-top: 0; }
+        .input-group { display: flex; gap: 8px; margin-bottom: 12px; }
+        input, textarea { flex: 1; padding: 12px; border-radius: 12px; border: 2px solid #475569; background-color: #0f172a; color: white; }
+        .btn { background-color: var(--neon-blue); color: #000; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .btn-accent { background-color: var(--accent-color); }
+        .scenario-box { background-color: #0f172a; border-radius: 16px; padding: 20px; margin: 20px 0; border-right: 5px solid var(--accent-color); }
+        .result-box { display: none; background-color: rgba(15, 23, 42, 0.8); border-radius: 16px; padding: 20px; border: 2px solid var(--success-color); }
+        .dev-contact { background: linear-gradient(135deg, #25D366 0%, #075E54 100%); color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; border-radius: 14px; font-weight: bold; margin-top: 25px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>🏆 كابتن سيناريو</h1>
+    <div id="setupStage">
+        <h3>ضيف أسماء الشلة:</h3>
+        <div class="input-group">
+            <input type="text" id="playerName" placeholder="اكتب اسم صاحبك...">
+            <button class="btn" onclick="addPlayer()">إضافة</button>
+        </div>
+        <div id="playersList"></div>
+        <button class="btn btn-accent" style="width: 100%; margin-top: 20px;" onclick="startGame()">ابدأ التحدي 🚀</button>
+    </div>
+
+    <div id="playStage" class="hidden">
+        <div class="scenario-box" id="scenarioText">جاري التحضير...</div>
+        <textarea id="playerDecision" rows="3" placeholder="اكتب قرارك هنا..." style="width: 90%; margin-bottom: 10px;"></textarea>
+        <button class="btn btn-accent" onclick="submitDecision()" style="width: 100%;">أرسل القرار ⚖️</button>
+        
+        <div class="result-box" id="resultBox">
+            <h3 style="text-align: center; color: var(--accent-color);">النتيجة</h3>
+            <div id="survivalRate" style="font-size: 2rem; color: var(--success-color); text-align: center;"></div>
+            <p id="aiResponse"></p>
+            <button class="btn" style="width: 100%;" onclick="nextRound()">اللاعب التالي 🔄</button>
+        </div>
+    </div>
+
+    <a href="https://wa.me/201020053692?text=يا%20كابتن%20أحمد%20أنا%20عايز%20أعمل%20نسخة%20خاصة%20من%20اللعبة!" target="_blank" class="dev-contact">
+        💬 تواصل مع المطور (أحمد صلاح) 01020053692
+    </a>
+</div>
+
+<script>
+    const API_KEY = "AIzaSyD" + "TEST" + "KEY"; // استبدله بمفتاحك لو عايز ذكاء اصطناعي حقيقي
+    let players = [];
+    let currentPlayerIndex = 0;
+    let usedScenarios = [];
+    const scenarios = [
+        "أنت نايم في حصة المستر وفجأة نده اسمك وقالك اعرب الكلمة اللي على السبورة، و [OTHERS] عمالين يغششوك إجابة غلط!",
+        "كنت بتلعب كورة وشوطت كورة صاروخية كسرت فازة الست أم أحمد العصبية، و [OTHERS] جريوا وسابوك لوحدك!",
+        "دخلت لجنة الامتحان ولقيت أول سؤالين في الفيزياء بلغة غريبة، و [OTHERS] بيحلوا بسرعة مريبة والمراقب واقف فوق راسك!",
+        "كنت بتهزر مع [OTHERS] والمستر طردك أنت بالذات وسابهم هما يكملوا الحصة عادي!"
+    ];
+
+    function addPlayer() {
+        const name = document.getElementById('playerName').value.trim();
+        if (name && !players.includes(name)) {
+            players.push(name);
+            document.getElementById('playersList').innerHTML += `<span style="background:#334155; padding:5px; margin:2px; display:inline-block; border-radius:10px;">${name}</span> `;
+            document.getElementById('playerName').value = '';
+        }
+    }
+
+    function startGame() {
+        if (players.length < 2) { alert("ضيف لاعبين على الأقل!"); return; }
+        document.getElementById('setupStage').classList.add('hidden');
+        document.getElementById('playStage').classList.remove('hidden');
+        nextRound();
+    }
+
+    function nextRound() {
+        document.getElementById('resultBox').style.display = 'none';
+        const activePlayer = players[currentPlayerIndex];
+        const others = players.filter(p => p !== activePlayer).join(' و ');
+        let template = scenarios[Math.floor(Math.random() * scenarios.length)];
+        document.getElementById('scenarioText').innerHTML = `<b>${activePlayer}</b>: ${template.replace('[OTHERS]', others)}`;
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    }
+
+    function submitDecision() {
+        document.getElementById('resultBox').style.display = 'block';
+        document.getElementById('survivalRate').innerText = Math.floor(Math.random() * 100) + "%";
+        document.getElementById('aiResponse').innerText = "تصرف ذكي جداً! أصحابه مبهورين بيك.";
+    }
+</script>
+</body>
+</html>
